@@ -1,9 +1,9 @@
-# Postgres deployment
+# Deployment do Banco de Dados
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgre
-spec:
+spec: 
   selector:
     matchLabels:
       app: postgre
@@ -36,12 +36,13 @@ spec:
     - port: 5432
       targetPort: 5432
 ---
-# Web app deployment
+# Deployment da Aplicação Web
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: fakeshop
-spec:
+spec: 
+  replicas: 4
   selector:
     matchLabels:
       app: fakeshop
@@ -52,7 +53,7 @@ spec:
     spec:
       containers:
         - name: fakeshop
-          image: jrodrigop/fake-shop:v1
+          image: jrodrigop/fake-shop:v2
           ports:
             - containerPort: 5000
           env:
@@ -60,12 +61,10 @@ spec:
               value: postgre
             - name: DB_USER
               value: fakeshop
-            - name: DB_PASSWORD 
+            - name: DB_PASSWORD
               value: Pg1234
             - name: DB_NAME
               value: fakeshop
-            - name: DB_PORT
-              value: "5432"
             - name: FLASK_APP
               value: index.py
 ---
@@ -75,7 +74,7 @@ metadata:
   name: fakeshop
 spec:
   selector:
-    app: fakeshop 
+    app: fakeshop
   ports:
     - port: 80
       targetPort: 5000
